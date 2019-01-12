@@ -40,6 +40,12 @@ logout.addEventListener('click', () => {
 auth.onAuthStateChanged(user => {
   if (user) {
     me =  user;
+    // ログイン後にメッセージをクリアする
+    // messages の最初の子要素が存在する限り messages から messages の最初の子要素を削除していく
+    while(messages.firstChild){
+      messages.removeChild(messages.firstChild);
+    }
+
     // コレクションの監視
     collection.orderBy('created').onSnapshot(snapshot => {
       snapshot.docChanges().forEach(change => {

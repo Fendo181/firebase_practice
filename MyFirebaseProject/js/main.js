@@ -35,6 +35,12 @@ form.addEventListener('submit', e => {
   //  e.preventDefault(); でページ遷移しないようにする
   e.preventDefault();
 
+  // 投稿直後に表示されるようにしてほしい
+  const li = document.createElement('li');
+  // 入力した値を追加する
+  li.textContent = message.value;
+  messages.appendChild(li);
+
   // 保存する
   collection.add({
     message:message.value,

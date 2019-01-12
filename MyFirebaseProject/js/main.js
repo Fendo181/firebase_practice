@@ -64,11 +64,10 @@ auth.onAuthStateChanged(user => {
   me =  null;
   console.log('NoBody is logged in');
   login.classList.remove('hidden');
-  form.classList.remove('hidden');
   // 他のhiddenクラスが入っているクラスを全て外す
-  // [logout, form, message].forEach(el => {
-  //   el.classList.add('hidden');
-  // });
+  [logout, form, message].forEach(el => {
+    el.classList.add('hidden');
+  });
 });
 
 form.addEventListener('submit', e => {

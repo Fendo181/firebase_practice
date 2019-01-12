@@ -34,6 +34,7 @@ login.addEventListener('click', () => {
 
 logout.addEventListener('click', () => {
   auth.signOut();
+  location.reload();
 });
 
 // ログイン状態を監視する

@@ -51,7 +51,7 @@ auth.onAuthStateChanged(user => {
           messages.appendChild(li);
         }
       });
-    });
+    }, error => {});
     console.log(`Logged in as : ${user.id}`);
     login.classList.add('hidden');
     // 他のhiddenクラスが入っているクラスを全て外す

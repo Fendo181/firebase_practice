@@ -19,3 +19,11 @@ input[type="text"]{
     font-size: 14px;
     width: 300px;
 }
+
+h3 > button{
+    float: right;
+}
+
+.hidden {
+    display: none;
+}

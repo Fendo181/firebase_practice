@@ -45,12 +45,6 @@ form.addEventListener('submit', e => {
     return;
   }
 
-  // 投稿直後に表示されるようにしてほしい
-  const li = document.createElement('li');
-  // 入力した値を追加する
-  li.textContent = val;
-  messages.appendChild(li);
-
   // 入力値を空にする
   message.value = '';
   message.focus();

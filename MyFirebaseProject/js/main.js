@@ -16,20 +16,54 @@ db.settings({
 // messages という Collection がなかった場合は新しく作ってくれる
 const collection = db.collection('messages');
 
+// Firebase 認証
+const auth = firebase.auth();
+
 // formから受け取った値を取得する
 const message = document.getElementById('message');
 const form = document.querySelector('form');
 const messages = document.getElementById('messages');
+const login = document.getElementById('login');
+const logout = document.getElementById('logout');
 
-// 入力した値を表示する
-collection.orderBy('created').onSnapshot(snapshot => {
-  snapshot.docChanges().forEach(change => {
-    if (change.type === 'added') {
-      const li = document.createElement('li');
-      li.textContent = change.doc.data().message;
-      // messages に対して、子要素として li を追加
-      messages.appendChild(li);
-    }
+// 認証処理
+login.addEventListener('click', () => {
+  auth.signInAnonymously();
+});
+
+logout.addEventListener('click', () => {
+  auth.signOut();
+});
+
+// ログイン状態を監視する
+auth.onAuthStateChanged(user => {
+  if (user) {
+
+    // コレクションの監視
+    collection.orderBy('created').onSnapshot(snapshot => {
+      snapshot.docChanges().forEach(change => {
+        if (change.type === 'added') {
+          const li = document.createElement('li');
+          li.textContent = change.doc.data().message;
+          // messages に対して、子要素として li を追加
+          messages.appendChild(li);
+        }
+      });
+    });
+    console.log(`Logged in as : ${user.id}`);
+    login.classList.add('hidden');
+    // 他のhiddenクラスが入っているクラスを全て外す
+    [logout, form, message].forEach(el => {
+      el.classList.remove('hidden');
+    });
+    message.focus();
+    return;
+  }
+  console.log('NoBody is logged in');
+  login.classList.remove('hidden');
+  // 他のhiddenクラスが入っているクラスを全て外す
+  [logout, form, message].forEach(el => {
+    el.classList.add('hidden');
   });
 });
 
@@ -61,5 +95,3 @@ form.addEventListener('submit', e => {
       console.log(error);
     });
 });
-
-message.focus();

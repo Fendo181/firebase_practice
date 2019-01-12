@@ -35,21 +35,31 @@ form.addEventListener('submit', e => {
   //  e.preventDefault(); でページ遷移しないようにする
   e.preventDefault();
 
+  // 入力したデータを検査する
+  const val = message.value.trim();
+  if (val === ""){
+    // 空文字の場合は処理をしない。
+    alert('空文字を入力しないで下さい');
+    return;
+  }
+
   // 投稿直後に表示されるようにしてほしい
   const li = document.createElement('li');
   // 入力した値を追加する
-  li.textContent = message.value;
+  li.textContent = val;
   messages.appendChild(li);
+
+  // 入力値を空にする
+  message.value = '';
+  message.focus();
 
   // 保存する
   collection.add({
-    message:message.value,
+    message:val,
     created: firebase.firestore.FieldValue.serverTimestamp()
   })
   .then(doc => {
     console.log(`${doc.id}.added!`)
-    message.value = '';
-    message.focus();
   })
   .catch(error => {
     console.log(error);

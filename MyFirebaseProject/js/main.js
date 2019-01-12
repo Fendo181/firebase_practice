@@ -8,21 +8,33 @@ const config = {
     messagingSenderId: "720323939081"
   };
   firebase.initializeApp(config);
-
 const db = firebase.firestore();
 
 db.settings({
   timestampsInSnapshots: true
 });
 // messages という Collection がなかった場合は新しく作ってくれる
-const collection = db.collection('mxessages');
+const collection = db.collection('messages');
 
-collection.add({
-  message:'test'
-})
-.then(doc => {
-  console.log(`${doc.id}.added!`)
-})
-.catch(error => {
-  console.log(error);
+// formから受け取った値を取得する
+const message = document.getElementById('messages');
+const form = document.querySelector('form');
+form.addEventListener('submit', e => {
+  //  e.preventDefault(); でページ遷移しないようにする
+  e.preventDefault();
+
+  // 保存する
+  collection.add({
+    message:message.value
+  })
+  .then(doc => {
+    console.log(`${doc.id}.added!`)
+    message.value = '';
+    message.focus();
+  })
+  .catch(error => {
+    console.log(error);
+  });
 });
+
+message.focus();

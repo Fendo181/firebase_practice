@@ -17,8 +17,20 @@ db.settings({
 const collection = db.collection('messages');
 
 // formから受け取った値を取得する
-const message = document.getElementById('messages');
+const message = document.getElementById('message');
 const form = document.querySelector('form');
+const messages = document.getElementById('messages');
+
+// 入力した値を表示する
+collection.get().then( snapshot => {
+  snapshot.forEach( doc => {
+    const li = document.createElement('li');
+    li.textContent = doc.data().message;
+    // messages に対して、子要素として li を追加
+    messages.appendChild(li);
+  });
+});
+
 form.addEventListener('submit', e => {
   //  e.preventDefault(); でページ遷移しないようにする
   e.preventDefault();

@@ -22,7 +22,7 @@ const form = document.querySelector('form');
 const messages = document.getElementById('messages');
 
 // 入力した値を表示する
-collection.get().then( snapshot => {
+collection.orderBy('created').get().then( snapshot => {
   snapshot.forEach( doc => {
     const li = document.createElement('li');
     li.textContent = doc.data().message;
@@ -37,7 +37,8 @@ form.addEventListener('submit', e => {
 
   // 保存する
   collection.add({
-    message:message.value
+    message:message.value,
+    created: firebase.firestore.FieldValue.serverTimestamp()
   })
   .then(doc => {
     console.log(`${doc.id}.added!`)

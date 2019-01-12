@@ -18,6 +18,7 @@ const collection = db.collection('messages');
 
 // Firebase 認証
 const auth = firebase.auth();
+let me = null;
 
 // formから受け取った値を取得する
 const message = document.getElementById('message');
@@ -38,13 +39,14 @@ logout.addEventListener('click', () => {
 // ログイン状態を監視する
 auth.onAuthStateChanged(user => {
   if (user) {
-
+    me =  user;
     // コレクションの監視
     collection.orderBy('created').onSnapshot(snapshot => {
       snapshot.docChanges().forEach(change => {
         if (change.type === 'added') {
           const li = document.createElement('li');
-          li.textContent = change.doc.data().message;
+          const d = change.doc.data();
+          li.textContent = d.uid.substr(0,8) + ':' + d.message;
           // messages に対して、子要素として li を追加
           messages.appendChild(li);
         }
@@ -59,6 +61,7 @@ auth.onAuthStateChanged(user => {
     message.focus();
     return;
   }
+  me =  null;
   console.log('NoBody is logged in');
   login.classList.remove('hidden');
   // 他のhiddenクラスが入っているクラスを全て外す
@@ -86,7 +89,9 @@ form.addEventListener('submit', e => {
   // 保存する
   collection.add({
       message: val,
-      created: firebase.firestore.FieldValue.serverTimestamp()
+      created: firebase.firestore.FieldValue.serverTimestamp(),
+      // meがnullだったら、nobodyが入るようにする
+      uid:me ? me.uid : 'nobody',
     })
     .then(doc => {
       console.log(`${doc.id}.added!`)
